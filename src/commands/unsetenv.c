@@ -1,0 +1,96 @@
+/*
+** EPITECH PROJECT, 2025
+** minishell_1
+** File description:
+** unsetenv
+*/
+
+#include <unistd.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include "my_lib.h"
+#include "utils.h"
+
+extern char **environ;
+
+bool check_variable_name(const char *name)
+{
+    int i = 0;
+
+    while (name[i] != '\0') {
+        if (name[i] == '=')
+            return false;
+        i++;
+    }
+    return true;
+}
+
+void replace_from_index(char **environ, int start, int end)
+{
+    int i = start;
+
+    while (i <= end && environ[i]) {
+        environ[i] = environ[i + 1];
+        i++;
+    }
+}
+
+int my_unsetenv(char **new_environ, const char *name)
+{
+    int i = 0;
+    char **line_elements = NULL;
+    int nb_vars = get_2d_arr_len(new_environ);
+
+    if (!check_variable_name(name))
+        return -1;
+    while (new_environ[i]) {
+        line_elements = my_str_to_word_array(new_environ[i]);
+        if (my_strcmp(line_elements[0], name) == 0) {
+            free(new_environ[i]);
+            replace_from_index(new_environ, i, nb_vars);
+            free_2d_array_of_char(line_elements);
+            return 0;
+        }
+        free_2d_array_of_char(line_elements);
+        i++;
+    }
+    return 0;
+}
+
+bool not_enough_args(bool is_correct_cmd, int nb_args,
+    char **cmd_args)
+{
+    if (!is_correct_cmd) {
+        free_2d_array_of_char(cmd_args);
+        return false;
+    }
+    if (is_correct_cmd && nb_args == 1) {
+        write(2, "unsetenv: Too few arguments.\n", 30);
+        free_2d_array_of_char(cmd_args);
+        return false;
+    }
+    return true;
+}
+
+bool is_unsetenv_command(char *command, bool *environ_modified)
+{
+    int i = 1;
+    char **cmd_args = my_str_to_word_array(command);
+    bool is_correct_cmd = is_good_cmd("unsetenv", command);
+    int nb_args = get_2d_arr_len(cmd_args);
+    char **new_environ = NULL;
+
+    if (!not_enough_args(is_correct_cmd, nb_args, cmd_args))
+        return false;
+    while (is_correct_cmd && cmd_args[i]) {
+        new_environ = duplicate_2d_char_array(environ, get_2d_arr_len(environ) + 1);
+        if (*environ_modified)
+            free_2d_array_of_char(environ);
+        *environ_modified = 1;
+        my_unsetenv(new_environ, cmd_args[i]);
+        i++;
+    }
+    environ = new_environ;
+    free_2d_array_of_char(cmd_args);
+    return true;
+}
