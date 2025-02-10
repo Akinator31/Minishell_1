@@ -44,7 +44,7 @@ int my_unsetenv(char **new_environ, const char *name)
     if (!check_variable_name(name))
         return -1;
     while (new_environ[i]) {
-        line_elements = my_str_to_word_array(new_environ[i]);
+        line_elements = my_str_to_word_array(new_environ[i], " ");
         if (my_strcmp(line_elements[0], name) == 0) {
             free(new_environ[i]);
             replace_from_index(new_environ, i, nb_vars);
@@ -75,7 +75,7 @@ bool not_enough_args(bool is_correct_cmd, int nb_args,
 bool is_unsetenv_command(char *command, bool *environ_modified)
 {
     int i = 1;
-    char **cmd_args = my_str_to_word_array(command);
+    char **cmd_args = my_str_to_word_array(command, " ");
     bool is_correct_cmd = is_good_cmd("unsetenv", command);
     int nb_args = get_2d_arr_len(cmd_args);
     char **new_environ = NULL;

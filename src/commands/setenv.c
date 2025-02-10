@@ -18,7 +18,7 @@ int env_var_already_exist(const char *variable)
     char **environ_elements = NULL;
 
     for (int i = 0; environ[i]; i++) {
-        environ_elements = my_str_to_word_array(environ[i]);
+        environ_elements = my_str_to_word_array(environ[i], " ");
         if (my_strcmp(environ_elements[0], variable) == 0) {
             free_2d_array_of_char(environ_elements);
             return i;
@@ -67,7 +67,7 @@ bool too_many_or_not_enough_args(bool is_correct_cmd, int nb_args,
 
 bool is_setenv_command(char *command, bool *environ_modified)
 {
-    char **cmd_args = my_str_to_word_array(command);
+    char **cmd_args = my_str_to_word_array(command, " ");
     bool is_correct_cmd = is_good_cmd("setenv", command);
     int nb_ags = get_2d_arr_len(cmd_args);
 
