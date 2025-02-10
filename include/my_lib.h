@@ -1,0 +1,20 @@
+/*
+** EPITECH PROJECT, 2024
+** my_printf.h
+** File description:
+** task02
+*/
+
+#ifndef MY_LIB_H
+    #define MY_LIB_H
+
+int my_strlen(char const *str);
+int my_strcmp(char const *s1, char const *s2);
+char **my_str_to_word_array(char const *str);
+int get_2d_arr_len(char **arr);
+void free_2d_array_of_char(char **arr);
+char *my_strdup(char const *src);
+char *my_strcat(char *dest, char const *src);
+char **duplicate_2d_char_array(char **array, int new_size);
+
+#endif
