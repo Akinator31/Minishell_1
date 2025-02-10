@@ -18,15 +18,9 @@ int analyse_command(char *command, bool *environ_modified)
         return EXIT;
     if (is_nothing(command))
         return NOTHING;
-    if (is_setenv_command(command, environ_modified)) {
-        write(1, prompt, 3);
-        return NORMAL;
-    }
-    if (is_unsetenv_command(command, environ_modified)) {
-        write(1, prompt, 3);
-        return NORMAL;
-    }
-    if (is_env_command(command)) {
+    if (is_setenv_command(command, environ_modified) ||
+        is_unsetenv_command(command, environ_modified) ||
+        is_env_command(command)) {
         write(1, prompt, 3);
         return NORMAL;
     }
