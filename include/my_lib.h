@@ -10,11 +10,12 @@
 
 int my_strlen(char const *str);
 int my_strcmp(char const *s1, char const *s2);
-char **my_str_to_word_array(char const *str);
+char **my_str_to_word_array(char const *str, char *separator);
 int get_2d_arr_len(char **arr);
 void free_2d_array_of_char(char **arr);
 char *my_strdup(char const *src);
 char *my_strcat(char *dest, char const *src);
 char **duplicate_2d_char_array(char **array, int new_size);
+int my_is_char_in_str(char *string, char character);
 
 #endif
