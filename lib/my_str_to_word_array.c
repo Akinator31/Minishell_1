@@ -18,6 +18,8 @@ static int is_alphanumeric_char(char const str_char, char *separator)
         found = 1;
     if ((str_char >= 'A') && (str_char <= 'Z'))
         found = 1;
+    if (str_char == '_')
+        found = 1;
     if (my_is_char_in_str(separator, str_char))
         found = 0;
     return found;
@@ -25,7 +27,8 @@ static int is_alphanumeric_char(char const str_char, char *separator)
 
 static int next_word_index(char const *str, int index, char *separator)
 {
-    while ((is_alphanumeric_char(str[index], separator)) == 1 && (str[index + 1] != '\0'))
+    while ((is_alphanumeric_char(str[index], separator)) == 1
+        && (str[index + 1] != '\0'))
         index++;
     return index;
 }
@@ -80,7 +83,8 @@ char **my_str_to_word_array(char const *str, char *separator)
     result[count_word(str, separator)] = NULL;
     if (!str)
         return result;
-    for (i = 0; (nb_word < count_word(str, separator)) || (i <= my_strlen(str)); i++) {
+    for (i = 0; (nb_word < count_word(str, separator)) ||
+        (i <= my_strlen(str)); i++) {
         if (is_alphanumeric_char(str[i], separator) == 1) {
             j = get_end_of_word(i, str, separator);
             result[nb_word] = malloc(sizeof(char) * (j - i) + 1);
