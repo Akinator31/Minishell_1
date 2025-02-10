@@ -20,6 +20,6 @@ enum EXIT_STATUS {
     NOTHING,
 };
 
-int analyse_command(char *command, bool *environ_modified);
+int analyse_command(char ***evnp, char *command, bool is_tty);
 
 #endif

@@ -10,20 +10,20 @@
 #include "commands.h"
 #include "mysh.h"
 
-extern char **environ;
-
-int analyse_command(char *command, bool *environ_modified)
+int analyse_command(char ***evnp, char *command, bool is_tty)
 {
     if (is_exit_command(command))
         return EXIT;
-    if (is_nothing(command))
+    if (is_nothing(command, is_tty))
         return NOTHING;
-    if (is_setenv_command(command, environ_modified) ||
-        is_unsetenv_command(command, environ_modified) ||
-        is_env_command(command)) {
-        write(1, prompt, 3);
+    if (is_setenv_command(evnp, command) ||
+        is_unsetenv_command(evnp, command) ||
+        is_env_command(evnp, command)) {
+        if (!is_tty)
+            write(1, prompt, 3);
         return NORMAL;
     }
-    write(1, prompt, 3);
+    if (!is_tty)
+        write(1, prompt, 3);
     return NORMAL;
 }

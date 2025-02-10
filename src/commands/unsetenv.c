@@ -11,8 +11,6 @@
 #include "my_lib.h"
 #include "utils.h"
 
-extern char **environ;
-
 bool check_variable_name(const char *name)
 {
     int i = 0;
@@ -72,7 +70,7 @@ bool not_enough_args(bool is_correct_cmd, int nb_args,
     return true;
 }
 
-bool is_unsetenv_command(char *command, bool *environ_modified)
+bool is_unsetenv_command(char ***envp, char *command)
 {
     int i = 1;
     char **cmd_args = my_str_to_word_array(command, " ");
@@ -83,14 +81,13 @@ bool is_unsetenv_command(char *command, bool *environ_modified)
     if (!not_enough_args(is_correct_cmd, nb_args, cmd_args))
         return false;
     while (is_correct_cmd && cmd_args[i]) {
-        new_environ = duplicate_2d_char_array(environ, get_2d_arr_len(environ) + 1);
-        if (*environ_modified)
-            free_2d_array_of_char(environ);
-        *environ_modified = 1;
+        new_environ = duplicate_2d_char_array(*envp,
+            get_2d_arr_len(*envp) + 1);
+        free_2d_array_of_char(*envp);
         my_unsetenv(new_environ, cmd_args[i]);
         i++;
     }
-    environ = new_environ;
+    *envp = new_environ;
     free_2d_array_of_char(cmd_args);
     return true;
 }

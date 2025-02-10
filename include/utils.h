@@ -11,7 +11,6 @@
 
 bool is_good_cmd(char *cmd, char *prompt);
 char *get_environ_var(const char *name, const char *value);
-void free_environ(void);
-void env(void);
+void env(char **envp);
 
 #endif

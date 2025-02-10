@@ -10,9 +10,9 @@
     #include <stdbool.h>
 
 bool is_exit_command(char *command);
-bool is_nothing(char *command);
-bool is_env_command(char *command);
-bool is_setenv_command(char *command, bool *environ_modified);
-bool is_unsetenv_command(char *command, bool *environ_modified);
+bool is_nothing(char *command, bool is_tty);
+bool is_env_command(char ***envp, char *command);
+bool is_setenv_command(char ***envp, char *command);
+bool is_unsetenv_command(char ***envp, char *command);
 
 #endif

@@ -11,25 +11,23 @@
 #include "my_lib.h"
 #include "utils.h"
 
-extern char **environ;
-
-void env(void)
+void env(char **envp)
 {
     int i = 0;
 
-    while (environ[i + 1]) {
-        write(1, environ[i], my_strlen(environ[i]));
+    while (envp[i + 1]) {
+        write(1, envp[i], my_strlen(envp[i]));
         write(1, "\n", 1);
         i++;
     }
-    write(1, environ[i], my_strlen(environ[i]));
+    write(1, envp[i], my_strlen(envp[i]));
     write(1, "\n", 1);
 }
 
-bool is_env_command(char *command)
+bool is_env_command(char ***envp, char *command)
 {
     if (is_good_cmd("env", command)) {
-        env();
+        env(*envp);
         return true;
     }
     return false;
