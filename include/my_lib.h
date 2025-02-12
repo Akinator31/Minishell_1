@@ -17,5 +17,7 @@ char *my_strdup(char const *src);
 char *my_strcat(char *dest, char const *src);
 char **duplicate_2d_char_array(char **array, int new_size);
 int my_is_char_in_str(char *string, char character);
+char *my_strstr(char *str, char const *to_find);
+char *my_strcpy(char *dest, char const *src);
 
 #endif

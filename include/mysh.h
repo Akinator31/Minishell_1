@@ -11,8 +11,6 @@
     #define IS_A_TTY_OFFSET -10
     #define IS_NOT_A_TTY_OFFSET 0
 
-static const char *prompt = "$> ";
-
 enum EXIT_STATUS {
     NORMAL,
     EXIT,

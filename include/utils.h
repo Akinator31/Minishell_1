@@ -11,6 +11,14 @@
 
 bool is_good_cmd(char *cmd, char *prompt);
 char *get_environ_var(const char *name, const char *value);
+char *get_environ_variable_value(char ***envp, char *variable);
 void env(char **envp);
+char *get_binary_name(char *command);
+int get_index_of_environment_variable(char **envp, char *environment_variable);
+void print_prompt(char **envp);
+void *my_memset(void *pointer, int value, size_t size);
+int my_setenv(char ***envp, const char *name, const char *value,
+    int overwrite);
+void my_free(void *ptr, ...);
 
 #endif
