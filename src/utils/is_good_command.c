@@ -12,8 +12,13 @@
 bool is_good_cmd(char *cmd, char *prompt)
 {
     char **prompt_elt = my_str_to_word_array(prompt, " ");
-    int is_correct_cmd = my_strcmp(cmd, prompt_elt[0]);
+    int is_correct_cmd = 0;
 
+    if (get_2d_arr_len(prompt_elt) == 0) {
+        free_2d_array_of_char(prompt_elt);
+        return false;
+    }
+    is_correct_cmd = my_strcmp(cmd, prompt_elt[0]);
     if (is_correct_cmd == 0) {
         free_2d_array_of_char(prompt_elt);
         return true;
