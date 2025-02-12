@@ -9,21 +9,23 @@
 #include "my_lib.h"
 #include "commands.h"
 #include "mysh.h"
+#include "utils.h"
 
 int analyse_command(char ***evnp, char *command, bool is_tty)
 {
     if (is_exit_command(command))
         return EXIT;
-    if (is_nothing(command, is_tty))
+    if (is_nothing(command, is_tty, *evnp))
         return NOTHING;
     if (is_setenv_command(evnp, command) ||
         is_unsetenv_command(evnp, command) ||
-        is_env_command(evnp, command)) {
+        is_env_command(evnp, command) ||
+        is_cd_command(evnp, command)) {
         if (!is_tty)
-            write(1, prompt, 3);
+            print_prompt(*evnp);
         return NORMAL;
     }
     if (!is_tty)
-        write(1, prompt, 3);
+        print_prompt(*evnp);
     return NORMAL;
 }
