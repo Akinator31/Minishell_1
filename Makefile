@@ -11,8 +11,9 @@ LIB = $(shell find . -type f -name "*.a")
 OBJ = 	$(SRC:%.c=build/%.o)
 OBJ_DEBUG = 	$(SRC:%.c=build-debug/%.o)
 OBJS_TESTS = $(SRC_TESTS:%.c=build-tests/%.o)
-DEBUG_FLAGS = -g3 -Iinclude -fsanitize=address -Wextra -Wall
+DEBUG_FLAGS = -g3 -Iinclude -fsanitize=address -Wextra -Weverything
 TEST_FLAGS = -Iinclude --coverage -lgcov -lcriterion
+CC = clang
 CFLAGS += -Iinclude
 NAME = mysh
 DEBUG_NAME = debug
@@ -20,11 +21,11 @@ TEST_NAME = test_my_sh
 
 build/%.o: %.c
 	mkdir -p $(dir $@)
-	gcc $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 build-debug/%.o: %.c
 	mkdir -p $(dir $@)
-	gcc $(DEBUG_FLAGS) -c $< -o $@
+	$(CC) $(DEBUG_FLAGS) -c $< -o $@
 
 build-tests/%.o: %.c
 	mkdir -p $(dir $@)
@@ -33,16 +34,17 @@ build-tests/%.o: %.c
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc -o $(NAME) $(OBJ) $(LIB) $(CFLAGS)
+	$(CC) -o $(NAME) $(OBJ) $(LIB) $(CFLAGS)
 
 $(DEBUG_NAME): $(OBJ_DEBUG)
-	gcc -o $(DEBUG_NAME) $(OBJ_DEBUG) $(LIB) $(DEBUG_FLAGS)
+	$(CC) -o $(DEBUG_NAME) $(OBJ_DEBUG) $(LIB) $(DEBUG_FLAGS)
 
 tests_run: $(OBJS_TESTS)
 	gcc -o $(TEST_NAME) $(OBJS_TESTS) $(TEST_FLAGS)
 	./$(TEST_NAME)
 
 show_test: tests_run
+	mkdir -p coverage
 	gcovr -r . --html --html-details -o coverage/index.html
 	firefox coverage/index.html
 
@@ -56,5 +58,8 @@ fclean: clean
 	rm -f $(NAME)
 	rm -f $(DEBUG_NAME)
 	rm -f $(TEST_NAME)
+	rm -rf coverage
+	$(shell find . -name "*.gcda" -delete)
+	$(shell find . -name "*.gcno" -delete)
 
 re: fclean all
