@@ -12,11 +12,11 @@
 #include "my_lib.h"
 #include "utils.h"
 
-bool is_nothing(char *command, bool is_tty)
+bool is_nothing(char *command, bool is_tty, char **envp)
 {
     if (my_strlen(command) == 1) {
         if (!is_tty)
-            write(1, prompt, 4);
+            print_prompt(envp);
         return true;
     }
     return false;

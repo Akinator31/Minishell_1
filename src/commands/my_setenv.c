@@ -33,12 +33,13 @@ int my_setenv(char ***envp, const char *name, const char *value,
     int environ_size = get_2d_arr_len(*envp);
     int variable_index_if_existing = env_var_already_exist(envp, name);
     char **new_environ = NULL;
+    char **env = *envp;
 
     if (variable_index_if_existing != -1) {
         if (!overwrite)
             return 0;
-        free(*envp[variable_index_if_existing]);
-        *envp[variable_index_if_existing] = get_environ_var(name, value);
+        free(env[variable_index_if_existing]);
+        env[variable_index_if_existing] = get_environ_var(name, value);
         return 0;
     } else {
         new_environ = duplicate_2d_char_array(*envp, environ_size + 2);
