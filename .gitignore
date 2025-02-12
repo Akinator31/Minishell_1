@@ -1,3 +1,4 @@
 .vscode
 tester.sh
-tests
+test
+coding-style-reports.log
