@@ -14,7 +14,7 @@
 #include "mysh.h"
 #include "utils.h"
 
-int mysh(char ***envp, int is_tty)
+int mysh(char ***envp, int is_tty, int *error_code)
 {
     int result_command = 0;
     char *buffer = NULL;
@@ -23,7 +23,7 @@ int mysh(char ***envp, int is_tty)
     if (!is_tty)
         print_prompt(*envp);
     while (getline(&buffer, &len, stdin) != -1) {
-        result_command = analyse_command(envp, buffer, is_tty);
+        result_command = analyse_command(envp, buffer, is_tty, error_code);
         if (result_command == EXIT) {
             free(buffer);
             return EXIT;
@@ -42,16 +42,17 @@ int main(int ac, char **av, char **envp)
     int mysh_exit_status = 0;
     int mysh_tty_exit_status = 0;
     char **env = NULL;
+    int error_code = 0;
 
     if (ac > 1)
         return 84;
     env = duplicate_2d_char_array(envp, get_2d_arr_len(envp) + 1);
     if (!isatty(stdin->_fileno))
-        mysh_tty_exit_status = mysh(&env, 1);
+        mysh_tty_exit_status = mysh(&env, 1, &error_code);
     else
-        mysh_exit_status = mysh(&env, 0);
+        mysh_exit_status = mysh(&env, 0, &error_code);
     if (mysh_exit_status == EXIT_EOF)
         write(1, "exit\n", 6);
     free_2d_array_of_char(env);
-    return 0;
+    return error_code;
 }

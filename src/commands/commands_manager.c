@@ -21,7 +21,8 @@ static const my_builtins_t my_builtins_arr[] = {
     {NULL, NULL},
 };
 
-exit_status_t analyse_command(char ***evnp, char *command, bool is_tty)
+exit_status_t analyse_command(char ***evnp, char *command,
+    bool is_tty, int *error_code)
 {
     exit_status_t status = NORMAL;
 
@@ -29,6 +30,6 @@ exit_status_t analyse_command(char ***evnp, char *command, bool is_tty)
         if (my_builtins_arr[i].f(evnp, command, is_tty, &status))
             return status;
     }
-    my_exec(evnp, command, is_tty, &status);
+    my_exec(evnp, command, &status, error_code);
     return NORMAL;
 }

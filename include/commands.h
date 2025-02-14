@@ -22,7 +22,7 @@ bool is_unsetenv_command(char ***envp, char *command,
     bool is_tty, exit_status_t *status);
 bool is_cd_command(char ***envp, char *command,
     bool is_tty, exit_status_t *status);
-bool my_exec(char ***envp, char *command,
-    bool is_tty, exit_status_t *status);
+void my_exec(char ***envp, char *command,
+    exit_status_t *status, int *error_code);
 
 #endif
