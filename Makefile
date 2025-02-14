@@ -11,9 +11,8 @@ LIB = $(shell find . -type f -name "*.a")
 OBJ = 	$(SRC:%.c=build/%.o)
 OBJ_DEBUG = 	$(SRC:%.c=build-debug/%.o)
 OBJS_TESTS = $(SRC_TESTS:%.c=build-tests/%.o)
-DEBUG_FLAGS = -g3 -Iinclude -fsanitize=address -Wextra -Weverything
+DEBUG_FLAGS = -g3 -Iinclude -fsanitize=address -Wextra
 TEST_FLAGS = -Iinclude --coverage -lgcov -lcriterion
-CC = clang
 CFLAGS += -Iinclude
 NAME = mysh
 DEBUG_NAME = debug
@@ -21,11 +20,11 @@ TEST_NAME = test_my_sh
 
 build/%.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	gcc $(CFLAGS) -c $< -o $@
 
 build-debug/%.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(DEBUG_FLAGS) -c $< -o $@
+	gcc $(DEBUG_FLAGS) -c $< -o $@
 
 build-tests/%.o: %.c
 	mkdir -p $(dir $@)
@@ -34,10 +33,10 @@ build-tests/%.o: %.c
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LIB) $(CFLAGS)
+	gcc -o $(NAME) $(OBJ) $(LIB) $(CFLAGS)
 
 $(DEBUG_NAME): $(OBJ_DEBUG)
-	$(CC) -o $(DEBUG_NAME) $(OBJ_DEBUG) $(LIB) $(DEBUG_FLAGS)
+	gcc -o $(DEBUG_NAME) $(OBJ_DEBUG) $(LIB) $(DEBUG_FLAGS)
 
 tests_run: $(OBJS_TESTS)
 	gcc -o $(TEST_NAME) $(OBJS_TESTS) $(TEST_FLAGS)
