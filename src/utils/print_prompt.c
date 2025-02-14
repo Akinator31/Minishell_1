@@ -22,7 +22,9 @@ void print_hostname(void)
     if (!hostname_file)
         return;
     hostname_len = read(hostname_file, hostname, 253);
+    write(1, "\e[4;37m", 8);
     write(1, hostname, hostname_len - 1);
+    write(1, "\e[0;37m", 8);
     close(hostname_file);
 }
 
@@ -33,15 +35,15 @@ void print_prompt(char **envp)
 
     if (my_strstr(current_dir, home) != NULL) {
         print_hostname();
-        write(1, ":~", 3);
+        write(1, ":~\e[1;37m", 10);
         write(1, current_dir + my_strlen(home),
             my_strlen(current_dir + my_strlen(home)));
-        write(1, "> ", 2);
+        write(1, "\e[0;37m> ", 10);
     } else {
         print_hostname();
-        write(1, ":", 2);
+        write(1, ":\e[1;37m", 9);
         write(1, current_dir, my_strlen(current_dir));
-        write(1, "> ", 2);
+        write(1, "\e[0;37m> ", 10);
     }
     free(home);
     free(current_dir);
