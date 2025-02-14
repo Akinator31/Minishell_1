@@ -12,7 +12,8 @@
 #include "my_lib.h"
 #include "utils.h"
 
-bool is_exit_command(char ***envp, char *command, bool is_tty, exit_status_t *status)
+bool is_exit_command(char ***envp, char *command,
+    bool is_tty, exit_status_t *status)
 {
     if (my_strlen(command) <= 1)
         return false;

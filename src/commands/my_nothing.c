@@ -12,7 +12,8 @@
 #include "my_lib.h"
 #include "utils.h"
 
-bool is_nothing(char ***envp, char *command, bool is_tty, exit_status_t *status)
+bool is_nothing(char ***envp, char *command,
+    bool is_tty, exit_status_t *status)
 {
     if (my_strlen(command) == 1) {
         if (!is_tty)

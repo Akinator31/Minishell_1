@@ -72,7 +72,7 @@ bool not_enough_args(bool is_correct_cmd, int nb_args,
 }
 
 bool is_unsetenv_command(char ***envp, char *command,
-        bool is_tty, exit_status_t *status)
+    bool is_tty, exit_status_t *status)
 {
     int i = 1;
     char **cmd_args = my_str_to_word_array(command, " ");

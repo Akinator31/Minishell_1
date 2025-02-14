@@ -13,7 +13,8 @@
 char *is_file_executed(char *path, char *binary)
 {
     int binary_path_size = my_strlen(path) + my_strlen(binary) + 3;
-    char *binary_path = malloc(sizeof(char) * (my_strlen(path) + my_strlen(binary) + 3));
+    char *binary_path = malloc(sizeof(char) *
+        (my_strlen(path) + my_strlen(binary) + 3));
 
     my_memset(binary_path, '\0', binary_path_size);
     binary_path = my_strcat(binary_path, path);
