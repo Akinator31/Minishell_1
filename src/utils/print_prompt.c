@@ -36,12 +36,12 @@ void print_prompt(char **envp)
         write(1, ":~", 3);
         write(1, current_dir + my_strlen(home),
             my_strlen(current_dir + my_strlen(home)));
-        write(1, ">", 2);
+        write(1, "> ", 2);
     } else {
         print_hostname();
         write(1, ":", 2);
         write(1, current_dir, my_strlen(current_dir));
-        write(1, ">", 2);
+        write(1, "> ", 2);
     }
     free(home);
     free(current_dir);
