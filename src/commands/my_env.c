@@ -15,6 +15,8 @@ void env(char **envp)
 {
     int i = 0;
 
+    if (!envp[0])
+        return;
     while (envp[i + 1]) {
         write(1, envp[i], my_strlen(envp[i]));
         write(1, "\n", 1);
