@@ -43,6 +43,8 @@ int main(int ac, char **av, char **envp)
     int mysh_tty_exit_status = 0;
     char **env = NULL;
 
+    if (ac > 1)
+        return 84;
     env = duplicate_2d_char_array(envp, get_2d_arr_len(envp) + 1);
     if (!isatty(stdin->_fileno))
         mysh_tty_exit_status = mysh(&env, 1);
