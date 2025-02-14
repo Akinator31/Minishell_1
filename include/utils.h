@@ -20,5 +20,6 @@ void *my_memset(void *pointer, int value, size_t size);
 int my_setenv(char ***envp, const char *name, const char *value,
     int overwrite);
 void my_free(void *ptr, ...);
+char *get_binary(char ***envp, char *command);
 
 #endif
