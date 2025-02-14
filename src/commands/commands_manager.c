@@ -11,21 +11,24 @@
 #include "mysh.h"
 #include "utils.h"
 
-int analyse_command(char ***evnp, char *command, bool is_tty)
+static const my_builtins_t my_builtins_arr[] = {
+    {"\n", &is_nothing},
+    {"exit", &is_exit_command},
+    {"env", &is_env_command},
+    {"setenv", &is_setenv_command},
+    {"unsetenv", &is_unsetenv_command},
+    {"cd", &is_cd_command},
+    {NULL, NULL},
+};
+
+exit_status_t analyse_command(char ***evnp, char *command, bool is_tty)
 {
-    if (is_exit_command(command))
-        return EXIT;
-    if (is_nothing(command, is_tty, *evnp))
-        return NOTHING;
-    if (is_setenv_command(evnp, command) ||
-        is_unsetenv_command(evnp, command) ||
-        is_env_command(evnp, command) ||
-        is_cd_command(evnp, command)) {
-        if (!is_tty)
-            print_prompt(*evnp);
-        return NORMAL;
+    exit_status_t status = NORMAL;
+
+    for (int i = 0; my_builtins_arr[i].builtins_name; i++) {
+        if (my_builtins_arr[i].f(evnp, command, is_tty, &status))
+            return status;
     }
-    if (!is_tty)
-        print_prompt(*evnp);
+    my_exec(evnp, command, is_tty, &status);
     return NORMAL;
 }

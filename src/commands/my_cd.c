@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "mysh.h"
 #include "my_lib.h"
 #include "utils.h"
 #include "commands.h"
@@ -129,10 +130,11 @@ static int my_cd(char ***envp, char *command)
     free_2d_array_of_char(command_element);
 }
 
-bool is_cd_command(char ***envp, char *command)
+bool is_cd_command(char ***envp, char *command, bool is_tty, exit_status_t *status)
 {
     if (is_good_cmd("cd", command)) {
         my_cd(envp, command);
+        *status = NORMAL;
         return true;
     }
     return false;

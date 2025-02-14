@@ -28,6 +28,8 @@ int mysh(char ***envp, int is_tty)
             free(buffer);
             return EXIT;
         }
+        if (result_command == NORMAL && !is_tty)
+            print_prompt(*envp);
         if (result_command == NOTHING)
             continue;
     }

@@ -11,13 +11,18 @@
     #define IS_A_TTY_OFFSET -10
     #define IS_NOT_A_TTY_OFFSET 0
 
-enum EXIT_STATUS {
+typedef enum {
     NORMAL,
     EXIT,
     EXIT_EOF,
     NOTHING,
-};
+} exit_status_t;
 
-int analyse_command(char ***evnp, char *command, bool is_tty);
+typedef struct {
+    char *builtins_name;
+    bool (*f)(char ***, char *, bool, exit_status_t *);
+} my_builtins_t;
+
+exit_status_t analyse_command(char ***evnp, char *command, bool is_tty);
 
 #endif

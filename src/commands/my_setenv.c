@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "my_lib.h"
 #include "utils.h"
+#include "mysh.h"
 
 int env_var_already_exist(char ***envp, const char *variable)
 {
@@ -64,7 +65,7 @@ bool too_many_or_not_enough_args(char ***envp, bool is_correct_cmd,
     return true;
 }
 
-bool is_setenv_command(char ***envp, char *command)
+bool is_setenv_command(char ***envp, char *command, bool is_tty, exit_status_t *status)
 {
     char **cmd_args = my_str_to_word_array(command, " ");
     bool is_correct_cmd = is_good_cmd("setenv", command);
@@ -78,6 +79,7 @@ bool is_setenv_command(char ***envp, char *command)
             return false;
         }
         free_2d_array_of_char(cmd_args);
+        *status = NORMAL;
         return true;
     } else {
         free_2d_array_of_char(cmd_args);

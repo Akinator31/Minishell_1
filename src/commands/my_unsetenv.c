@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "my_lib.h"
 #include "utils.h"
+#include "mysh.h"
 
 bool check_variable_name(const char *name)
 {
@@ -70,7 +71,8 @@ bool not_enough_args(bool is_correct_cmd, int nb_args,
     return true;
 }
 
-bool is_unsetenv_command(char ***envp, char *command)
+bool is_unsetenv_command(char ***envp, char *command,
+        bool is_tty, exit_status_t *status)
 {
     int i = 1;
     char **cmd_args = my_str_to_word_array(command, " ");
@@ -88,6 +90,7 @@ bool is_unsetenv_command(char ***envp, char *command)
         i++;
     }
     *envp = new_environ;
+    *status = NORMAL;
     free_2d_array_of_char(cmd_args);
     return true;
 }
