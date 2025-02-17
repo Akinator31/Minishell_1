@@ -22,12 +22,12 @@ static const my_builtins_t my_builtins_arr[] = {
 };
 
 exit_status_t analyse_command(char ***evnp, char *command,
-    bool is_tty, int *error_code)
+    int *error_code)
 {
     exit_status_t status = NORMAL;
 
     for (int i = 0; my_builtins_arr[i].builtins_name; i++) {
-        if (my_builtins_arr[i].f(evnp, command, is_tty, &status))
+        if (my_builtins_arr[i].f(evnp, command, &status, error_code))
             return status;
     }
     my_exec(evnp, command, &status, error_code);

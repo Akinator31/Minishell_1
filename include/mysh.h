@@ -20,10 +20,10 @@ typedef enum {
 
 typedef struct {
     char *builtins_name;
-    bool (*f)(char ***, char *, bool, exit_status_t *);
+    bool (*f)(char ***, char *, exit_status_t *, int *);
 } my_builtins_t;
 
 exit_status_t analyse_command(char ***evnp, char *command,
-    bool is_tty, int *error_code);
+    int *error_code);
 
 #endif

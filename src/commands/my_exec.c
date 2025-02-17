@@ -24,6 +24,7 @@ void exit_manager(int status, pid_t pid, int *error_code)
         my_putstr(strsignal(WTERMSIG(status)), 2);
         write(2, "\n", 1);
     }
+    *error_code = WEXITSTATUS(status);
     kill(pid, 0);
 }
 
@@ -82,7 +83,8 @@ void my_exec(char ***envp, char *command,
         launch_file(envp, command_element, error_code);
     } else if (!binary_path) {
         write(2, command_element[0], my_strlen(command_element[0]));
-        write(2, ": Command not found.\n", 22);
+        write(2, ": Command not found.\n", 21);
+        *error_code = 1;
         return;
     } else {
         launch_binary(envp, binary_path, command_element, error_code);

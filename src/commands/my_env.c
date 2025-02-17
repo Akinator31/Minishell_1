@@ -27,7 +27,7 @@ void env(char **envp)
 }
 
 bool is_env_command(char ***envp, char *command,
-    bool is_tty, exit_status_t *status)
+    exit_status_t *status, int *error_code)
 {
     if (is_good_cmd("env", command)) {
         env(*envp);

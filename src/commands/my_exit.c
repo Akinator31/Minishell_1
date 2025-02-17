@@ -13,7 +13,7 @@
 #include "utils.h"
 
 bool is_exit_command(char ***envp, char *command,
-    bool is_tty, exit_status_t *status)
+    exit_status_t *status, int *error_code)
 {
     if (my_strlen(command) <= 1)
         return false;

@@ -66,7 +66,7 @@ bool too_many_or_not_enough_args(char ***envp, bool is_correct_cmd,
 }
 
 bool is_setenv_command(char ***envp, char *command,
-    bool is_tty, exit_status_t *status)
+    exit_status_t *status, int *error_code)
 {
     char **cmd_args = my_str_to_word_array(command, " ");
     bool is_correct_cmd = is_good_cmd("setenv", command);
