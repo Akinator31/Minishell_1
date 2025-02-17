@@ -21,5 +21,8 @@ int my_setenv(char ***envp, const char *name, const char *value,
     int overwrite);
 void my_free(void *ptr, ...);
 char *get_binary(char ***envp, char *command);
+int change_directory(char *path_to_directory, char *current_directory,
+    char *old_directory, int *error_code);
+int change_directory_to_env(char *variable);
 
 #endif
