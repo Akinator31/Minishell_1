@@ -84,6 +84,7 @@ void my_exec(char ***envp, char *command,
     } else if (!binary_path) {
         write(2, command_element[0], my_strlen(command_element[0]));
         write(2, ": Command not found.\n", 21);
+        free_2d_array_of_char(command_element);
         *error_code = 1;
         return;
     } else {

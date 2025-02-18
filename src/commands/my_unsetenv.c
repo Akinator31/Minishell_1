@@ -85,7 +85,6 @@ bool is_unsetenv_command(char ***envp, char *command,
     while (is_correct_cmd && cmd_args[i]) {
         new_environ = duplicate_2d_char_array(*envp,
             get_2d_arr_len(*envp) + 1);
-        free_2d_array_of_char(*envp);
         my_unsetenv(new_environ, cmd_args[i]);
         i++;
     }

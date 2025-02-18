@@ -9,6 +9,8 @@
 
 void free_2d_array_of_char(char **arr)
 {
+    if (!arr || !*arr)
+        return;
     for (int i = 0; arr[i] != NULL; i++) {
         free(arr[i]);
     }
