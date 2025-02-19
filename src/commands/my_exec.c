@@ -83,9 +83,9 @@ void my_exec(char ***envp, char *command,
 
     if (!binary_path) {
         launch_file(envp, command_element, error_code);
-        return;
     } else {
         launch_binary(envp, binary_path, command_element, error_code);
     }
-    free(binary_path);
+    if (binary_path)
+        free(binary_path);
 }
