@@ -61,7 +61,8 @@ void launch_file(char ***envp, char **command_element, int *error_code)
     if (pid == 0) {
         exec_return = execve(command_element[0], command_element, *envp);
         if (exec_return != 0) {
-            perror(command_element[0]);
+            write(2, command_element[0], my_strlen(command_element[0]));
+            write(2, ": Command not found.\n", 21);
             free_2d_array_of_char(command_element);
             exit(exec_return);
         }
@@ -80,13 +81,8 @@ void my_exec(char ***envp, char *command,
     char **command_element = my_str_to_word_array(command, " ");
     char *binary_path = get_binary(envp, command);
 
-    if (command_element[0][0] == '.' || command_element[0][0] == '/') {
+    if (!binary_path) {
         launch_file(envp, command_element, error_code);
-    } else if (!binary_path) {
-        write(2, command_element[0], my_strlen(command_element[0]));
-        write(2, ": Command not found.\n", 21);
-        free_2d_array_of_char(command_element);
-        *error_code = 1;
         return;
     } else {
         launch_binary(envp, binary_path, command_element, error_code);

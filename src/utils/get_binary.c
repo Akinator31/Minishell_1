@@ -39,6 +39,7 @@ char *get_binary_path(char **path_element, char *command)
         }
     }
     free_2d_array_of_char(command_element);
+    return NULL;
 }
 
 char *get_binary(char ***envp, char *command)
