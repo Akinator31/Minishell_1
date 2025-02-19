@@ -16,11 +16,12 @@
 #include "mysh.h"
 #include "my_lib.h"
 #include "utils.h"
+#include <signal.h>
 
 void exit_manager(int status, pid_t pid, int *error_code)
 {
     if (!WIFEXITED(status)) {
-        *error_code = WTERMSIG(status);
+        *error_code = 128 + WTERMSIG(status);
         my_putstr(strsignal(WTERMSIG(status)), 2);
         write(2, "\n", 1);
         return;
