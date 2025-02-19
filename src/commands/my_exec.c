@@ -20,9 +20,10 @@
 void exit_manager(int status, pid_t pid, int *error_code)
 {
     if (!WIFEXITED(status)) {
-        *error_code = WTERMSIG(status);
+        *error_code = status;
         my_putstr(strsignal(WTERMSIG(status)), 2);
         write(2, "\n", 1);
+        return;
     }
     *error_code = WEXITSTATUS(status);
     kill(pid, 0);
