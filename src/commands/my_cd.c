@@ -14,117 +14,33 @@
 #include "utils.h"
 #include "commands.h"
 
-static int cd_to_old_directory(char ***envp, int *error_code)
-{
-    char *current_directory = get_environ_variable_value(envp, "PWD");
-    char *old_directory = get_environ_variable_value(envp, "OLDPWD");
+static const my_cd_t my_flags_arr[] = {
+    {'~', &cd_to_directory, "HOME"},
+    {'-', &cd_to_directory, "OLDPWD"},
+    {'$', &cd_to_directory, NULL},
+    {'?', NULL, NULL},
+};
 
-    if (!old_directory || !current_directory) {
-        write(2, ": No such file or folder.\n", 27);
-        free(old_directory);
-        free(current_directory);
-        return 1;
-    } else {
-        if (chdir(old_directory) == -1) {
-            perror(old_directory);
-            return 1;
-        }
-        my_setenv(envp, "OLDPWD", current_directory, 1);
-        my_setenv(envp, "PWD", old_directory, 1);
-    }
-    free(old_directory);
-    free(current_directory);
-    return 0;
-}
-
-static int cd_to_home_directory(char ***envp, int *error_code)
-{
-    char *home_directory = get_environ_variable_value(envp, "HOME");
-    char *current_directory = get_environ_variable_value(envp, "PWD");
-    char *old_directory = get_environ_variable_value(envp, "OLDPWD");
-
-    if (!current_directory || !home_directory) {
-        write(2, ": No such file or folder.\n", 27);
-        my_free(current_directory, old_directory, NULL);
-        return 0;
-    } else {
-        if (chdir(home_directory) == -1) {
-            perror(home_directory);
-            my_free(home_directory, current_directory, old_directory, NULL);
-            return 1;
-        }
-        my_setenv(envp, "OLDPWD", current_directory, 1);
-        my_setenv(envp, "PWD", home_directory, 1);
-        my_free(home_directory, current_directory, old_directory, NULL);
-    }
-    return 0;
-}
-
-static int cd_to_directory(char ***envp,
-    char *path_to_directory, int *error_code)
-{
-    char *current_directory = get_environ_variable_value(envp, "PWD");
-    char *old_directory = get_environ_variable_value(envp, "OLDPWD");
-    char *directory = NULL;
-
-    if (!current_directory) {
-        my_free(current_directory, old_directory, directory, NULL);
-        return write(2, "PWD variable not found\n", 24);
-    } else {
-        if (change_directory(path_to_directory,
-            current_directory, old_directory, error_code))
-            return 1;
-        directory = getcwd(NULL, 0);
-        my_setenv(envp, "OLDPWD", current_directory, 1);
-        my_setenv(envp, "PWD", directory, 1);
-        free(directory);
-        my_free(current_directory, old_directory, NULL);
-    }
-    return 0;
-}
-
-static int cd_to_env_directory(char ***envp,
-    char **command_element, int *error_code)
-{
-    char *current_directory = get_environ_variable_value(envp, "PWD");
-    char *variable = get_environ_variable_value(envp, command_element[1] + 1);
-    char *old_directory = get_environ_variable_value(envp, "OLDPWD");
-    char *directory = NULL;
-
-    if (!variable) {
-        write(2, command_element[1] + 1, my_strlen(command_element[1] + 1));
-        return write(2, ": Variable undefined.\n", 23);
-    } else {
-        if (change_directory_to_env(variable))
-            return 1;
-        directory = getcwd(NULL, 0);
-        my_setenv(envp, "OLDPWD", current_directory, 1);
-        my_setenv(envp, "PWD", directory, 1);
-        free(directory);
-        my_free(current_directory, old_directory, NULL);
-    }
-    return 0;
-}
-
-static int my_cd(char ***envp, char *command, int *error_code)
+static void my_cd(char ***envp, char *command, int *error_code)
 {
     char **command_element = my_str_to_word_array(command, " ");
+    int nb_args = get_2d_arr_len(command_element);
 
-    if (get_2d_arr_len(command_element) == 1) {
-        free_2d_array_of_char(command_element);
-        return cd_to_home_directory(envp, error_code);
+    if (is_too_much_args(nb_args, command_element, error_code))
+        return;
+    for (int i = 0; my_flags_arr[i].f && nb_args > 1; i++) {
+        if (nb_args == 1) {
+            cd_to_directory(envp, "HOME", error_code, 1);
+            free_2d_array_of_char(command_element);
+            return;
+        }
+        if (command_element[1][0] == my_flags_arr[i].flag) {
+            my_flags_arr[i].f(envp, my_flags_arr[i].variable, error_code, 1);
+            free_2d_array_of_char(command_element);
+            return;
+        }
     }
-    if (my_strcmp(command_element[1], "-") == 0) {
-        free_2d_array_of_char(command_element);
-        return cd_to_old_directory(envp, error_code);
-    }
-    if (my_strcmp(command_element[1], "~") == 0) {
-        free_2d_array_of_char(command_element);
-        return cd_to_home_directory(envp, error_code);
-    }
-    if (command_element[1][0] == '$')
-        return cd_to_env_directory(envp, command_element, error_code);
-    cd_to_directory(envp, command_element[1], error_code);
+    cd_to_directory(envp, command_element[1], error_code, 0);
     free_2d_array_of_char(command_element);
 }
 

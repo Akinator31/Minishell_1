@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include "utils.h"
 
-int change_directory(char *path_to_directory, char *current_directory,
+int change_dir(char *path_to_directory, char *current_directory,
     char *old_directory, int *error_code)
 {
     if (chdir(path_to_directory) == -1) {
         perror(path_to_directory);
         my_free(current_directory, old_directory, NULL);
-        *error_code = 1;
+        *error_code = 84;
         return 1;
     }
     return 0;
