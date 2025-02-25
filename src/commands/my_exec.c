@@ -17,6 +17,7 @@
 #include "my_lib.h"
 #include "utils.h"
 #include <signal.h>
+#include <errno.h>
 
 void exit_manager(int status, pid_t pid, int *error_code)
 {
@@ -61,12 +62,7 @@ void launch_file(char ***envp, char **command_element, int *error_code)
 
     if (pid == 0) {
         exec_return = execve(command_element[0], command_element, *envp);
-        if (exec_return != 0) {
-            write(2, command_element[0], my_strlen(command_element[0]));
-            write(2, ": Command not found.\n", 21);
-            free_2d_array_of_char(command_element);
-            exit(1);
-        }
+        errno_manager(exec_return, command_element);
         free_2d_array_of_char(command_element);
     } else {
         free_2d_array_of_char(command_element);

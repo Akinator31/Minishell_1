@@ -25,5 +25,6 @@ int change_dir(char *path_to_directory, char *current_directory,
     char *old_directory, int *error_code);
 int change_directory_to_env(char *variable);
 int is_too_much_args(int nb_args, char **command_element, int *error_code);
+void errno_manager(int exec_return, char **command_element);
 
 #endif
