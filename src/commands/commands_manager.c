@@ -25,11 +25,13 @@ exit_status_t analyse_command(char ***evnp, char *command,
     int *error_code)
 {
     exit_status_t status = NORMAL;
+    int exit_code = 0;
 
     for (int i = 0; my_builtins_arr[i].builtins_name; i++) {
         if (my_builtins_arr[i].f(evnp, command, &status, error_code))
             return status;
     }
-    my_exec(evnp, command, &status, error_code);
+    if (*error_code != 84)
+        my_exec(evnp, command, &status, error_code);
     return NORMAL;
 }

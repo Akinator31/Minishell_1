@@ -28,7 +28,7 @@ static void my_cd(char ***envp, char *command, int *error_code)
 
     if (is_too_much_args(nb_args, command_element, error_code))
         return;
-    for (int i = 0; my_flags_arr[i].f && nb_args > 1; i++) {
+    for (int i = 0; my_flags_arr[i].f; i++) {
         if (nb_args == 1) {
             cd_to_directory(envp, "HOME", error_code, 1);
             free_2d_array_of_char(command_element);

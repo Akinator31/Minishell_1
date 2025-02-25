@@ -65,8 +65,7 @@ void launch_file(char ***envp, char **command_element, int *error_code)
             write(2, command_element[0], my_strlen(command_element[0]));
             write(2, ": Command not found.\n", 21);
             free_2d_array_of_char(command_element);
-            *error_code = 84;
-            exit(exec_return);
+            exit(1);
         }
         free_2d_array_of_char(command_element);
     } else {
