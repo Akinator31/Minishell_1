@@ -56,7 +56,7 @@ bool error_nb_args(char ***envp, bool is_correct_cmd,
 {
     if (is_correct_cmd && (nb_args > 3 || nb_args == 1)) {
         if (nb_args > 3)
-            write(2, "Too much arguments\n", 19);
+            write(2, "setenv: Too many arguments.\n", 28);
         if (nb_args == 1)
             env(*envp);
         free_2d_array_of_char(cmd_args);
