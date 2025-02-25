@@ -20,5 +20,7 @@ int my_is_char_in_str(char *string, char character);
 char *my_strstr(char *str, char const *to_find);
 char *my_strcpy(char *dest, char const *src);
 void my_putstr(char const *str, int output);
+int my_str_isalpha(char const *str);
+int my_isalpha(char c);
 
 #endif
