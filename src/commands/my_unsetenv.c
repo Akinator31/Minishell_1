@@ -87,9 +87,9 @@ bool is_unsetenv_command(char ***envp, char *command,
         new_environ = duplicate_2d_char_array(*envp,
             get_2d_arr_len(*envp) + 1);
         my_unsetenv(new_environ, cmd_args[i]);
+        *envp = new_environ;
         i++;
     }
-    *envp = new_environ;
     *status = NORMAL;
     free_2d_array_of_char(cmd_args);
     return true;
