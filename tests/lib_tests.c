@@ -12,3 +12,11 @@ Test(my_strcmp, basic_my_strcmpt_test)
 {
     cr_assert_eq(my_strcmp("super_string", "super_string"), 0);
 }
+
+Test(test_free_2d, test_basic)
+{
+    char **word_array = my_str_to_word_array("ceci est un test", " ");
+    free_2d_array_of_char(word_array);
+    word_array = NULL;
+    cr_assert_null(word_array);
+}
