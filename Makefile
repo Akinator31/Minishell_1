@@ -30,26 +30,32 @@ build-tests/%.o: %.c
 	mkdir -p $(dir $@)
 	gcc $(TEST_FLAGS) -c $< -o $@
 
+.PHONY: all
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	gcc -o $(NAME) $(OBJ) $(LIB) $(CFLAGS)
 
+.PHONY: $(DEBUG_NAME)
 $(DEBUG_NAME): $(OBJ_DEBUG)
 	gcc -o $(DEBUG_NAME) $(OBJ_DEBUG) $(LIB) $(DEBUG_FLAGS)
 
+.PHONY: tests_run
 tests_run: $(OBJS_TESTS)
 	gcc -o $(TEST_NAME) $(OBJS_TESTS) $(TEST_FLAGS)
 	./$(TEST_NAME)
 
+.PHONY: show_test
 show_test: tests_run
 	mkdir -p coverage
 	gcovr -r . --html --html-details -o coverage/index.html
 	firefox coverage/index.html
 
+.PHONY: clean
 clean:
 	find . -type f -name "*.o" -delete
 
+.PHONY: fclean
 fclean: clean
 	rm -rf build
 	rm -rf build-debug
@@ -61,4 +67,6 @@ fclean: clean
 	$(shell find . -name "*.gcda" -delete)
 	$(shell find . -name "*.gcno" -delete)
 
+.PHONY: re
 re: fclean all
+.NOTPARALLEL: re
