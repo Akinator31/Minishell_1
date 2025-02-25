@@ -51,16 +51,45 @@ int my_setenv(char ***envp, const char *name, const char *value,
     }
 }
 
-bool too_many_or_not_enough_args(char ***envp, bool is_correct_cmd,
+bool error_nb_args(char ***envp, bool is_correct_cmd,
     int nb_args, char **cmd_args)
 {
     if (is_correct_cmd && (nb_args > 3 || nb_args == 1)) {
         if (nb_args > 3)
-            write(2, "Too much arguments\n", 20);
+            write(2, "Too much arguments\n", 19);
         if (nb_args == 1)
             env(*envp);
         free_2d_array_of_char(cmd_args);
         return false;
+    }
+    if (!(my_isalpha(cmd_args[1][0]) || cmd_args[1][0] == '_')) {
+        write(2, "setenv: Variable name must begin with a letter.\n", 49);
+        return false;
+    }
+    for (int i = 0; cmd_args[1][i] != '\0'; i++) {
+        if (!(my_isalpha(cmd_args[1][i])) && cmd_args[1][i] != '_') {
+            write(2, "setenv: Variable name must contain"
+                "alphanumeric characters.\n", 60);
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_correct_arguments(char *name, char *value)
+{
+    int i = 0;
+
+    if (!(my_isalpha(name[0]) || name[0] == '_')) {
+        write(2, "setenv: Variable name must begin with a letter.\n", 49);
+        return false;
+    }
+    for (; name[i] != '\0'; i++) {
+        if (!(my_isalpha(name[0])) && name[i] != '_') {
+            write(2, "setenv: Variable name must contain"
+                "alphanumeric characters.\n", 60);
+            return false;
+        }
     }
     return true;
 }
@@ -72,12 +101,14 @@ bool is_setenv_command(char ***envp, char *command,
     bool is_correct_cmd = is_good_cmd("setenv", command);
     int nb_ags = get_2d_arr_len(cmd_args);
 
-    if (!too_many_or_not_enough_args(envp, is_correct_cmd, nb_ags, cmd_args))
-        return false;
-    if (is_correct_cmd && (nb_ags == 2 || nb_ags == 3)) {
+    if (is_correct_cmd) {
+        if (!error_nb_args(envp, is_correct_cmd, nb_ags, cmd_args)) {
+            *error_code = 84;
+            return true;
+        }
         if (my_setenv(envp, cmd_args[1], cmd_args[2], 1) == -1) {
             write(2, "Not enough space in the environment\n", 37);
-            return false;
+            return true;
         }
         free_2d_array_of_char(cmd_args);
         *status = NORMAL;

@@ -57,14 +57,15 @@ int my_unsetenv(char **new_environ, const char *name)
 }
 
 bool not_enough_args(bool is_correct_cmd, int nb_args,
-    char **cmd_args)
+    char **cmd_args, int *error_code)
 {
     if (!is_correct_cmd) {
         free_2d_array_of_char(cmd_args);
         return false;
     }
     if (is_correct_cmd && nb_args == 1) {
-        write(2, "unsetenv: Too few arguments.\n", 30);
+        write(2, "unsetenv: Too few arguments.\n", 29);
+        *error_code = 84;
         free_2d_array_of_char(cmd_args);
         return false;
     }
@@ -80,7 +81,7 @@ bool is_unsetenv_command(char ***envp, char *command,
     int nb_args = get_2d_arr_len(cmd_args);
     char **new_environ = NULL;
 
-    if (!not_enough_args(is_correct_cmd, nb_args, cmd_args))
+    if (!not_enough_args(is_correct_cmd, nb_args, cmd_args, error_code))
         return false;
     while (is_correct_cmd && cmd_args[i]) {
         new_environ = duplicate_2d_char_array(*envp,
