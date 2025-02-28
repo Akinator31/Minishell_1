@@ -69,7 +69,7 @@ bool error_nb_args(char ***envp, bool is_correct_cmd,
     for (int i = 0; cmd_args[1][i] != '\0'; i++) {
         if (!(my_isalpha(cmd_args[1][i])) && cmd_args[1][i] != '_') {
             write(2, "setenv: Variable name must contain"
-                "alphanumeric characters.\n", 60);
+                " alphanumeric characters.\n", 60);
             return false;
         }
     }
