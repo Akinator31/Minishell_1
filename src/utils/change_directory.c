@@ -8,12 +8,21 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "utils.h"
+#include "my_lib.h"
+#include <string.h>
+#include <errno.h>
 
 int change_dir(char *path_to_directory, char *current_directory,
     char *old_directory, int *error_code)
 {
+    char *error_message = NULL;
+
     if (chdir(path_to_directory) == -1) {
-        perror(path_to_directory);
+        error_message = strerror(errno);
+        write(2, path_to_directory, my_strlen(path_to_directory));
+        write(2, ": ", 2);
+        write(2, error_message, my_strlen(error_message));
+        write(2, ".\n", 2);
         my_free(current_directory, old_directory, NULL);
         *error_code = 84;
         return 1;
