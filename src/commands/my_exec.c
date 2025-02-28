@@ -18,6 +18,8 @@
 #include "utils.h"
 #include <signal.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 void exit_manager(int status, pid_t pid, int *error_code)
 {
@@ -72,16 +74,50 @@ void launch_file(char ***envp, char **command_element, int *error_code)
     return;
 }
 
+int check_binary(char *path)
+{
+    int fd = open(path, O_RDONLY, 0);
+    char *buffer = malloc(sizeof(char) * 5);
+    struct stat info;
+
+    stat(path, &info);
+    if (fd == -1 || !S_ISREG(info.st_mode)) {
+        free(buffer);
+        return 1;
+    }
+    my_memset(buffer, 0, 5);
+    read(fd, buffer, 4);
+    if (my_strcmp("ELF", buffer + 1) == 0) {
+        close(fd);
+        free(buffer);
+        return 1;
+    }
+    write(2, path, my_strlen(path));
+    write(2, ": Exec format error. Binary file not executable.\n", 49);
+    close(fd);
+    free(buffer);
+    return 0;
+}
+
 void my_exec(char ***envp, char *command,
     exit_status_t *status, int *error_code)
 {
     char **command_element = my_str_to_word_array(command, " ");
     char *binary_path = get_binary(envp, command);
 
-    if (!binary_path || command[0] == '.')
+    if (!binary_path || command[0] == '.') {
+        if (!check_binary(command_element[0])) {
+            *error_code = 84;
+            return;
+        }
         launch_file(envp, command_element, error_code);
-    else
+    } else {
+        if (!check_binary(binary_path)) {
+            *error_code = 84;
+            return;
+        }
         launch_binary(envp, binary_path, command_element, error_code);
+    }
     if (binary_path)
         free(binary_path);
 }
