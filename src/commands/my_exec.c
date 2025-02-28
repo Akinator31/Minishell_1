@@ -87,14 +87,13 @@ int check_binary(char *path)
     }
     my_memset(buffer, 0, 5);
     read(fd, buffer, 4);
+    close(fd);
     if (my_strcmp("ELF", buffer + 1) == 0) {
-        close(fd);
         free(buffer);
         return 1;
     }
     write(2, path, my_strlen(path));
     write(2, ": Exec format error. Binary file not executable.\n", 49);
-    close(fd);
     free(buffer);
     return 0;
 }
