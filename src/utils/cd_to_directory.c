@@ -10,11 +10,16 @@
 #include "utils.h"
 #include "my_lib.h"
 
-int check_variable_result(char *current_directory, int *error_code)
+int check_variable_result(char *current_directory,
+    int *error_code, int is_variable, char *path)
 {
+    if (!current_directory && is_variable) {
+        write(2, "No $", 4);
+        my_write_min(path, 2);
+        write(2, " variable found\n", 16);
+    }
     if (!current_directory) {
         *error_code = 84;
-        write(2, "Variable not found\n", 20);
         return 0;
     }
     return 1;
@@ -55,7 +60,8 @@ void cd_to_directory(char ***envp,
         path = get_environ_variable_value(envp, path_to_directory);
     else
         path = path_to_directory;
-    if (!check_variable_result(current_directory, error_code))
+    if (!check_variable_result(current_directory, error_code,
+        is_variable, path_to_directory))
         return;
     if (change_dir(path, current_directory, old_directory, error_code))
         return;
